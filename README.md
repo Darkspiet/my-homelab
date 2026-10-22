@@ -32,9 +32,6 @@ The following services were recorded in my latest documented setup. Individual d
 | Home Assistant | Home automation and dashboard |
 | Dashy | Dashboard |
 | Pelican Panel and Wings | Game server management |
-| Kavita | Digital library and reading |
-| Shelfmark | Book search and requests |
-| NovelGrabber | Reading tools |
 | VS Code | Development tools |
 | Nginx Proxy Manager | Reverse proxy management |
 | cloudflared | Connectivity infrastructure |
