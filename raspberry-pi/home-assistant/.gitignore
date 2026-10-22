@@ -1,0 +1,7 @@
+secrets.yaml
+.storage/
+backups/
+*.tgz
+*.tar
+*.log*
+home-assistant_v2.db*

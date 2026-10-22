@@ -6,6 +6,13 @@
 
 cloudflared is the connector used by Cloudflare Tunnel. See the [official documentation](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/).
 
-## In My Homelab
+## Documented Use
 
-cloudflared runs in its own Proxmox container as part of the connectivity infrastructure.
+cloudflared is used to connect some of my services to my Domain name, to not expose my ports directly. 
+So i can enter my Services also outside without using an VPN 
+
+## Integration
+
+currently used for my pelican panel and dashy 
+
+

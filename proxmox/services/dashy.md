@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Dashy is a self-hosted dashboard for organizing links and information about services. See the [official documentation](https://dashy.to/docs/).
+Dashy is a lil self-hosted dashboard for organizing links and information about services, that can help u find things easier also it is higly customisable. See the [official documentation](https://dashy.to/docs/).
 
 ## In My Homelab
 

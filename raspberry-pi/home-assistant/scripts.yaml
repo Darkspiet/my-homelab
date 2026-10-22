@@ -1,0 +1,107 @@
+# Example scripts using neutral entity IDs and local secrets.
+proxmox_start:
+  alias: Start Proxmox
+  icon: mdi:power
+  mode: single
+  sequence:
+  - action: wake_on_lan.send_magic_packet
+    data:
+      mac: !secret 'proxmox_wake_mac'
+      broadcast_address: !secret 'proxmox_broadcast_address'
+      broadcast_port: 9
+proxmox_shutdown:
+  alias: Shut down Proxmox
+  icon: mdi:power-standby
+  mode: single
+  sequence:
+  - action: rest_command.proxmox_host_shutdown
+    response_variable: result
+  - if:
+    - condition: template
+      value_template: '{{ result.status | int(0) < 200 or result.status | int(0) >= 300 }}'
+    then:
+    - stop: Proxmox did not accept the shutdown request.
+      error: true
+nanoleaf_reconnect:
+  alias: Reconnect Nanoleaf
+  icon: mdi:bluetooth-connect
+  mode: single
+  max_exceeded: silent
+  sequence:
+  - variables:
+      previous_state: '{{ states(''light.nanoleaf_strip'') }}'
+      previous_brightness: '{{ state_attr(''light.nanoleaf_strip'',''brightness'') | int(255) }}'
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.nanoleaf_connection
+    data:
+      option: Connecting
+  - repeat:
+      count: 2
+      sequence:
+      - action: script.turn_on
+        target:
+          entity_id: script.nanoleaf_connection_test
+        data:
+          variables:
+            reload_connection: '{{ repeat.index > 1 }}'
+            previous_state: '{{ previous_state }}'
+            previous_brightness: '{{ previous_brightness }}'
+      - delay: 1
+      - wait_template: '{{ is_state(''script.nanoleaf_connection_test'',''off'') }}'
+        timeout: 00:00:35
+        continue_on_timeout: true
+      - if:
+        - condition: template
+          value_template: '{{ not wait.completed }}'
+        then:
+        - action: script.turn_off
+          target:
+            entity_id: script.nanoleaf_connection_test
+        - delay: 3
+      - if:
+        - condition: state
+          entity_id: input_select.nanoleaf_connection
+          state: Ready
+        then:
+        - stop: Nanoleaf is responding again.
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.nanoleaf_connection
+    data:
+      option: Connection error
+nanoleaf_connection_test:
+  alias: Nanoleaf connection test
+  mode: single
+  max_exceeded: silent
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ reload_connection | default(false) | bool }}'
+    then:
+    - action: homeassistant.reload_config_entry
+      data:
+        entry_id: !secret 'nanoleaf_config_entry_id'
+  - wait_template: '{{ states(''light.nanoleaf_strip'') in [''on'',''off''] }}'
+    timeout: 00:00:20
+    continue_on_timeout: false
+  - if:
+    - condition: template
+      value_template: '{{ previous_state | default(''off'') == ''on'' }}'
+    then:
+    - action: light.turn_on
+      target:
+        entity_id: light.nanoleaf_strip
+      data:
+        brightness: '{{ previous_brightness | default(255) | int }}'
+    else:
+    - action: light.turn_off
+      target:
+        entity_id: light.nanoleaf_strip
+  - condition: template
+    value_template: '{{ states(''light.nanoleaf_strip'') in [''on'',''off''] }}'
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.nanoleaf_connection
+    data:
+      option: Ready

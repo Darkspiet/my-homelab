@@ -1,0 +1,16 @@
+Homelab:
+  primary-color: '#68d9c0'
+  accent-color: '#68d9c0'
+  primary-background-color: '#101923'
+  secondary-background-color: '#172330'
+  card-background-color: '#172330'
+  primary-text-color: '#eef4f8'
+  secondary-text-color: '#a4b6c4'
+  ha-card-border-radius: 20px
+  ha-card-border-width: 0px
+  ha-card-box-shadow: none
+  modes:
+    dark: {}
+  app-header-background-color: '#101923'
+  app-header-text-color: '#eef4f8'
+  state-icon-color: '#a4b6c4'

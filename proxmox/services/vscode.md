@@ -6,6 +6,8 @@
 
 VS Code is the development tooling entry in this homelab.
 
+I use it mostly to test my Code and work on my Projects
+
 ## In My Homelab
 
-The development environment has its own container on the Proxmox server.
+Has its own container on the Proxmox server.

@@ -1,0 +1,27 @@
+# Reload Proxmox monitoring when the host returns but its readings are unavailable.
+automation:
+- id: proxmox_monitoring_reconnect
+  alias: Reconnect Proxmox monitoring
+  mode: single
+  max_exceeded: silent
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.proxmox_online
+    to: 'on'
+    for: 00:00:10
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: /2
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.proxmox_online
+    state: 'on'
+  - condition: template
+    value_template: '{{ states(''sensor.proxmox_cpu_usage'') in [''unknown'',''unavailable''] or states(''sensor.proxmox_memory_usage_percentage'')
+      in [''unknown'',''unavailable''] or states(''binary_sensor.proxmox_status'') != ''on'' }}'
+  actions:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: !secret 'proxmox_config_entry_id'
+  - delay: 00:00:20

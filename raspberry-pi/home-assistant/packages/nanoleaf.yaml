@@ -1,0 +1,102 @@
+# Nanoleaf connection helper and guarded light controls.
+input_select:
+  nanoleaf_connection:
+    name: Nanoleaf Connection
+    options:
+    - Not checked
+    - Connecting
+    - Ready
+    - Connection error
+    initial: Not checked
+    icon: mdi:bluetooth-connect
+template:
+- light:
+  - name: Nanoleaf Controls
+    default_entity_id: light.nanoleaf_controls
+    unique_id: nanoleaf_panel_guarded
+    state: '{{ states(''light.nanoleaf_strip'') }}'
+    availability: '{{ is_state(''input_select.nanoleaf_connection'', ''Ready'') and states(''light.nanoleaf_strip'')
+      in [''on'',''off''] }}'
+    level: '{{ state_attr(''light.nanoleaf_strip'',''brightness'') | int(0) }}'
+    hs: '{{ state_attr(''light.nanoleaf_strip'',''hs_color'') or [0,0] }}'
+    temperature: '{{ (1000000 / (state_attr(''light.nanoleaf_strip'',''color_temp_kelvin'') | float(4000)))
+      | int }}'
+    turn_on:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Connection error
+    - action: light.turn_on
+      target:
+        entity_id: light.nanoleaf_strip
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Ready
+    turn_off:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Connection error
+    - action: light.turn_off
+      target:
+        entity_id: light.nanoleaf_strip
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Ready
+    set_level:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Connection error
+    - action: light.turn_on
+      target:
+        entity_id: light.nanoleaf_strip
+      data:
+        brightness: '{{ brightness | int }}'
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Ready
+    set_hs:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Connection error
+    - action: light.turn_on
+      target:
+        entity_id: light.nanoleaf_strip
+      data:
+        hs_color: '{{ hs }}'
+        brightness: '{{ brightness | default(state_attr(''light.nanoleaf_strip'',''brightness''),true)
+          | int(255) }}'
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Ready
+    set_temperature:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Connection error
+    - action: light.turn_on
+      target:
+        entity_id: light.nanoleaf_strip
+      data:
+        color_temp_kelvin: '{{ color_temp_kelvin | default((1000000 / (color_temp | float(250))) | int)
+          }}'
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.nanoleaf_connection
+      data:
+        option: Ready

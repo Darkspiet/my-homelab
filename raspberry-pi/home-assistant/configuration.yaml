@@ -1,0 +1,77 @@
+# Public configuration example. Merge with your existing configuration.
+# UI integration setup is described in integrations.md.
+homeassistant:
+  packages:
+    nanoleaf_controls: !include 'packages/nanoleaf.yaml'
+    proxmox_recovery: !include 'packages/proxmox-recovery.yaml'
+  name: Home
+  time_zone: Europe/Berlin
+  country: DE
+  currency: EUR
+  unit_system: metric
+default_config: null
+frontend:
+  themes: !include 'themes.yaml'
+lovelace:
+  dashboards:
+    homelab-panel:
+      mode: yaml
+      title: Homelab
+      icon: mdi:home
+      show_in_sidebar: true
+      filename: ui-lovelace.yaml
+logger:
+  default: warning
+recorder:
+  purge_keep_days: 7
+  commit_interval: 30
+command_line:
+- sensor:
+    name: Pi Memory Usage
+    unique_id: pi_memory_percent
+    command: awk '/MemTotal/ {t=$2} /MemAvailable/ {a=$2} END {printf "%.1f", (t-a)*100/t}' /proc/meminfo
+    unit_of_measurement: '%'
+    state_class: measurement
+    scan_interval: 60
+- sensor:
+    name: Pi Disk Usage
+    unique_id: pi_disk_percent
+    command: df -P /config | awk 'NR==2 {gsub(/%/, "", $5); print $5}'
+    unit_of_measurement: '%'
+    state_class: measurement
+    scan_interval: 300
+- sensor:
+    name: Pi Uptime
+    unique_id: pi_uptime_hours
+    command: cut -d ' ' -f 1 /proc/uptime
+    value_template: '{{ (value | float / 3600) | round(1) }}'
+    unit_of_measurement: h
+    state_class: measurement
+    scan_interval: 60
+- binary_sensor:
+    name: Proxmox Online
+    unique_id: proxmox_reachable
+    command: !secret 'proxmox_reachability_command'
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    device_class: connectivity
+    scan_interval: 60
+template:
+- sensor:
+  - name: Available Lights
+    unique_id: connected_lights_count
+    icon: mdi:lightbulb-group
+    state: '{{ states.light | rejectattr(''entity_id'', ''eq'', ''light.all_lights'') | rejectattr(''entity_id'',
+      ''eq'', ''light.nanoleaf_controls'') | rejectattr(''state'', ''in'', [''unknown'', ''unavailable''])
+      | list | count }}'
+wake_on_lan: null
+script: !include 'scripts.yaml'
+rest_command:
+  proxmox_host_shutdown:
+    url: !secret 'proxmox_shutdown_url'
+    method: post
+    verify_ssl: true
+    headers:
+      Authorization: !secret 'proxmox_shutdown_authorization'
+    content_type: application/x-www-form-urlencoded
+    payload: command=shutdown
