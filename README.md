@@ -6,13 +6,17 @@ This repository documents how the pieces fit together, the decisions behind them
 
 ## Overview
 
-The setup combines a custom-built Proxmox server, a Raspberry Pi running Home Assistant, and a repurposed Samsung tablet as a dashboard.
-
-Home Assistant runs separately from the main server, keeping home controls available when the Proxmox host is switched off.
+A custom-built Proxmox server hosts my virtualized services. A separate Raspberry Pi runs Home Assistant, with a repurposed Samsung tablet as its dashboard. Keeping home automation on the Pi allows it to operate independently of the main server.
 
 ![Hand-drawn overview of my homelab, showing the tablet dashboard, Raspberry Pi, Proxmox server, and lighting](homelab-overview.png)
 
-*This is a simplified functional overview, rather than a complete network map.*
+*My hand-drawn functional overview. Connections are simplified and do not represent the complete network topology.*
+
+## Explore the Setup
+
+- **[Proxmox server](proxmox/README.md):** virtualization, services, monitoring, and power controls.
+- **[Raspberry Pi](raspberry-pi/README.md):** the separate home automation controller.
+- **[Home Assistant](raspberry-pi/home-assistant/README.md):** the tablet dashboard, lighting, and server integration.
 
 ## Hardware
 
@@ -25,47 +29,25 @@ Home Assistant runs separately from the main server, keeping home controls avail
 
 ## Services
 
-The following services were recorded in my latest documented setup. Individual documentation and current status checks are being added.
+These are the services that make up my homelab.
 
 | Service | Area |
 | --- | --- |
-| Home Assistant | Home automation and dashboard |
-| Dashy | Dashboard |
-| Pelican Panel and Wings | Game server management |
-| VS Code | Development tools |
-| Nginx Proxy Manager | Reverse proxy management |
-| cloudflared | Connectivity infrastructure |
+| [Home Assistant](raspberry-pi/home-assistant/README.md) | Home automation and dashboard |
+| [Dashy](proxmox/services/dashy.md) | Dashboard |
+| [Pelican Panel and Wings](proxmox/services/pelican.md) | Game server management |
+| [VS Code](proxmox/services/vscode.md) | Development tools |
+| [Nginx Proxy Manager](proxmox/services/nginx-proxy-manager.md) | Reverse proxy management |
+| [cloudflared](proxmox/services/cloudflared.md) | Connectivity infrastructure |
 
-## Features and Progress
+See the [Proxmox service index](proxmox/services/README.md) for a closer look at each service.
 
-- Tablet dashboard combining home controls and server monitoring.
-- Proxmox resource and container status displays.
-- Wake-on-LAN and shutdown controls configured.
-- Local lighting control through LAN and Bluetooth integrations.
-- Connection status feedback and a manual reconnect control for Nanoleaf.
-- Home Assistant configuration backups stored on the Pi and PC.
+## Progress and Learning
 
-A complete server shutdown-and-wake cycle still needs final verification. Bluetooth reliability is also an ongoing improvement area.
-
-## What I'm Learning
-
-- Running and maintaining self-hosted services.
-- Working with Proxmox and containers.
-- Integrating devices into Home Assistant.
-- Designing useful dashboards.
-- Troubleshooting connectivity and keeping configuration backups.
-
-## Next Steps
-
-- [ ] Document each service and how I use it.
-- [ ] Expand the hardware overview.
-- [ ] Verify the complete server power cycle.
-- [ ] Improve Bluetooth reliability.
-- [ ] Refine dashboards and automations.
-- [ ] Explore a smart mirror as an additional display.
+The setup brings together a tablet dashboard, Proxmox monitoring, server power controls, and local lighting. Building it has helped me learn about virtualization, device integration, dashboard design, and troubleshooting.
 
 ## About This Documentation
 
-This is a growing personal project. Some parts are working, while others are still being tested or planned.
+This is a personal project that grows as I experiment and learn.
 
-Public diagrams and examples are simplified. Credentials, real addresses, domains, and detailed access configurations are intentionally omitted.
+Public diagrams and descriptions are simplified. Credentials, real device addresses, deployment domains, tunnel mappings, private configurations, and backups are excluded.
