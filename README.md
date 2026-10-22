@@ -22,7 +22,7 @@ A custom-built Proxmox server hosts my virtualized services. A separate Raspberr
 
 | Device | Role |
 | --- | --- |
-| Custom-built server | Proxmox VE host for virtualized services |
+| [Custom-built server](proxmox/README.md#hardware) | Ryzen 9 5900X · 32 GB DDR4 · Proxmox VE |
 | Raspberry Pi 3 Model B | Home Assistant and local device integrations |
 | Samsung Galaxy Tab S6 Lite | Dashboard for home controls and server monitoring |
 | Govee and Nanoleaf light strips | Connected lighting |
