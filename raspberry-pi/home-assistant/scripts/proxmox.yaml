@@ -1,0 +1,24 @@
+# Scripts grouped by device; merged under the script integration.
+proxmox_start:
+  alias: Start Proxmox
+  icon: mdi:power
+  mode: single
+  sequence:
+  - action: wake_on_lan.send_magic_packet
+    data:
+      mac: !secret 'proxmox_wake_mac'
+      broadcast_address: !secret 'proxmox_broadcast_address'
+      broadcast_port: 9
+proxmox_shutdown:
+  alias: Shut down Proxmox
+  icon: mdi:power-standby
+  mode: single
+  sequence:
+  - action: rest_command.proxmox_host_shutdown
+    response_variable: result
+  - if:
+    - condition: template
+      value_template: '{{ result.status | int(0) < 200 or result.status | int(0) >= 300 }}'
+    then:
+    - stop: Proxmox did not accept the shutdown request.
+      error: true

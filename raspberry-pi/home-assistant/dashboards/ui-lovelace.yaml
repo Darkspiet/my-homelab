@@ -1,0 +1,6 @@
+# View includes are relative to this dashboard file.
+title: Home
+views:
+- !include 'views/home.yaml'
+- !include 'views/server.yaml'
+- !include 'views/system.yaml'

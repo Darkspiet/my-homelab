@@ -21,7 +21,7 @@ The Proxmox monitoring account needs read permissions. The separate shutdown RES
 ## YAML Files
 
 1. Merge `configuration.yaml` into your existing configuration. Keep existing definitions and combine matching top-level sections.
-2. Place the scripts, theme, dashboard, and `packages/` files alongside it, merging existing files where needed.
+2. Copy the `dashboards/`, `scripts/`, `packages/`, and `themes/` folders alongside it, preserving their structure and merging existing files where needed.
 3. Copy `secrets.example.yaml` to a local `secrets.yaml` and replace every example value. The address and hostname in the example are intentionally unusable for your network.
 4. Map the UI integration entities across the dashboard, packages, scripts, and templates.
 5. Check the configuration in Home Assistant before reloading or restarting. Open the **Homelab** dashboard from the sidebar afterward.
@@ -29,6 +29,16 @@ The Proxmox monitoring account needs read permissions. The separate shutdown RES
 The package includes define `input_select.nanoleaf_connection` and `light.nanoleaf_controls`. The command-line sensors provide Pi memory, disk, and uptime readings plus `binary_sensor.proxmox_online`. The available-light sensor excludes the example light group and the Nanoleaf control wrapper.
 
 Existing entity-registry entries may keep their old names. Match them to the dashboard rather than assuming a display-name change will rename an existing entity.
+
+### How the Includes Work
+
+The registered dashboard file is `dashboards/ui-lovelace.yaml`. It includes each file under `dashboards/views/` explicitly, keeping Home, Server, and System in that order. View paths are relative to the dashboard file.
+
+The main configuration loads `scripts/` and `themes/` with `!include_dir_merge_named`. Each script file contains script names at its top level; the theme file contains the `Homelab` theme name. Keep those names unique across files.
+
+These split files are intended for a YAML dashboard loaded from disk. To use the raw configuration editor instead, first combine the views into one dashboard configuration.
+
+See [Home Assistant's configuration splitting guide](https://www.home-assistant.io/docs/configuration/splitting_configuration/) for include syntax.
 
 ## Local Secret Values
 
@@ -56,7 +66,7 @@ The command-line system readings run inside Home Assistant's environment. In a c
 
 ## Theme
 
-`themes.yaml` contains the **Homelab** dark theme from my tablet setup. The dashboard selects it for each view.
+`themes/homelab.yaml` contains the **Homelab** dark theme from my tablet setup. The dashboard selects it for each view.
 
 ## Validation
 

@@ -1,0 +1,168 @@
+title: Server
+path: server
+icon: mdi:server-network
+type: sections
+max_columns: 2
+sections:
+- type: grid
+  cards:
+  - type: heading
+    heading: Proxmox
+    icon: mdi:server
+  - type: button
+    entity: binary_sensor.proxmox_online
+    name: Start server
+    icon: mdi:power
+    show_state: false
+    tap_action:
+      action: perform-action
+      perform_action: script.proxmox_start
+    hold_action:
+      action: none
+    grid_options:
+      columns: 12
+      rows: 2
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'off'
+  - type: button
+    entity: binary_sensor.proxmox_online
+    name: Shut down server
+    icon: mdi:power-standby
+    show_state: false
+    state_color: true
+    tap_action:
+      action: perform-action
+      perform_action: script.proxmox_shutdown
+      confirmation:
+        text: Shut down Proxmox and its running VMs and containers?
+    hold_action:
+      action: none
+    grid_options:
+      columns: 12
+      rows: 2
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+  - type: button
+    name: Server status unknown
+    icon: mdi:server-network-off
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+    grid_options:
+      columns: 12
+      rows: 2
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state_not:
+      - 'on'
+      - 'off'
+  - type: tile
+    entity: sensor.proxmox_cpu_usage
+    name: CPU
+    tap_action:
+      action: more-info
+    grid_options:
+      columns: 6
+      rows: 1
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+    - condition: state
+      entity: sensor.proxmox_cpu_usage
+      state_not:
+      - unknown
+      - unavailable
+      - ''
+  - type: tile
+    entity: sensor.proxmox_memory_usage_percentage
+    name: RAM
+    tap_action:
+      action: more-info
+    grid_options:
+      columns: 6
+      rows: 1
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+    - condition: state
+      entity: sensor.proxmox_memory_usage_percentage
+      state_not:
+      - unknown
+      - unavailable
+      - ''
+  - type: tile
+    entity: sensor.proxmox_uptime
+    name: Uptime
+    tap_action:
+      action: more-info
+    grid_options:
+      columns: 12
+      rows: 1
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+    - condition: state
+      entity: sensor.proxmox_uptime
+      state_not:
+      - unknown
+      - unavailable
+      - ''
+  - type: markdown
+    content: The server is on. Reconnecting monitoring …
+    grid_options:
+      columns: 12
+      rows: auto
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+    - condition: or
+      conditions:
+      - condition: state
+        entity: sensor.proxmox_cpu_usage
+        state:
+        - unknown
+        - unavailable
+      - condition: state
+        entity: sensor.proxmox_memory_usage_percentage
+        state:
+        - unknown
+        - unavailable
+- type: grid
+  cards:
+  - type: heading
+    heading: Containers
+    icon: mdi:cube-outline
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+  - type: entities
+    entities:
+    - entity: binary_sensor.cloudflared_status
+      name: cloudflared
+    - entity: binary_sensor.dashy_status
+      name: dashy
+    - entity: binary_sensor.nginxproxymanager_status
+      name: nginxproxymanager
+    - entity: binary_sensor.pelican_panel_status
+      name: pelican-panel
+    - entity: binary_sensor.pelican_wings_status
+      name: pelican-wings
+    - entity: binary_sensor.vs_code_status
+      name: vs-code
+    show_header_toggle: false
+    visibility:
+    - condition: state
+      entity: binary_sensor.proxmox_online
+      state: 'on'
+theme: Homelab

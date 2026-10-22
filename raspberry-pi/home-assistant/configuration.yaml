@@ -11,7 +11,7 @@ homeassistant:
   unit_system: metric
 default_config: null
 frontend:
-  themes: !include 'themes.yaml'
+  themes: !include_dir_merge_named 'themes/'
 lovelace:
   dashboards:
     homelab-panel:
@@ -19,7 +19,7 @@ lovelace:
       title: Homelab
       icon: mdi:home
       show_in_sidebar: true
-      filename: ui-lovelace.yaml
+      filename: dashboards/ui-lovelace.yaml
 logger:
   default: warning
 recorder:
@@ -65,7 +65,7 @@ template:
       ''eq'', ''light.nanoleaf_controls'') | rejectattr(''state'', ''in'', [''unknown'', ''unavailable''])
       | list | count }}'
 wake_on_lan: null
-script: !include 'scripts.yaml'
+script: !include_dir_merge_named 'scripts/'
 rest_command:
   proxmox_host_shutdown:
     url: !secret 'proxmox_shutdown_url'

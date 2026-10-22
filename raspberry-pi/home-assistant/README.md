@@ -34,9 +34,20 @@ Pi system readings, light availability, and the Nanoleaf reconnect control.
 
 ## Dashboard YAML
 
-[ui-lovelace.yaml](ui-lovelace.yaml) is a public example adapted from my tablet dashboard, with Home, Server, and System views. Labels are in English and entity IDs use neutral example names. It uses the included Homelab theme.
+[dashboards/ui-lovelace.yaml](dashboards/ui-lovelace.yaml) is a public example adapted from my tablet dashboard, with Home, Server, and System views. Labels are in English and entity IDs use neutral example names. It uses the included Homelab theme.
 
 Supporting configuration is included below. The UI integrations still need to be connected to your own devices.
+
+### Dashboard Views
+
+| View | File |
+| --- | --- |
+| Home | [dashboards/views/home.yaml](dashboards/views/home.yaml) |
+| Server | [dashboards/views/server.yaml](dashboards/views/server.yaml) |
+| System | [dashboards/views/system.yaml](dashboards/views/system.yaml) |
+
+The dashboard entry point includes the views in this order. Scripts and themes are loaded from their own folders.
+
 
 | Example entity | Role |
 | --- | --- |
@@ -51,19 +62,45 @@ Supporting configuration is included below. The UI integrations still need to be
 | `binary_sensor.*_status` | Status of each listed Proxmox service |
 | `sensor.pi_*` / `sensor.available_lights` | Pi system readings and light availability |
 
-Replace the example entity IDs throughout the file before using it as a YAML dashboard or pasting it into the dashboard's raw configuration editor. The Nanoleaf helper and its reconnect script must agree on the English `Ready` state. The dashboard includes a confirmation prompt for server shutdown.
+Replace the example entity IDs across the dashboard views and supporting files before using this as a YAML dashboard. Keep the folder structure intact: the split files use includes and cannot be pasted individually into the raw configuration editor. The Nanoleaf helper and its reconnect script must agree on the English `Ready` state. The dashboard includes a confirmation prompt for server shutdown.
 
 Changes to these repository examples do not update the dashboard running on my tablet.
+
+## File Layout
+
+```text
+home-assistant/
+├── configuration.yaml
+├── secrets.example.yaml
+├── dashboards/
+│   ├── ui-lovelace.yaml
+│   └── views/
+│       ├── home.yaml
+│       ├── server.yaml
+│       └── system.yaml
+├── scripts/
+│   ├── proxmox.yaml
+│   └── nanoleaf.yaml
+├── packages/
+│   ├── nanoleaf.yaml
+│   └── proxmox-recovery.yaml
+├── themes/
+│   └── homelab.yaml
+├── images/
+├── integrations.md
+└── README.md
+```
 
 ## Supporting Configuration
 
 | File | Contents |
 | --- | --- |
 | [configuration.yaml](configuration.yaml) | Dashboard registration, includes, system sensors, light count, Wake-on-LAN, and shutdown REST command |
-| [scripts.yaml](scripts.yaml) | Server power actions and Nanoleaf reconnect logic |
+| [scripts/proxmox.yaml](scripts/proxmox.yaml) | Server startup and shutdown actions |
+| [scripts/nanoleaf.yaml](scripts/nanoleaf.yaml) | Nanoleaf reconnect and connection-test scripts |
 | [packages/nanoleaf.yaml](packages/nanoleaf.yaml) | Connection helper and guarded Nanoleaf light |
 | [packages/proxmox-recovery.yaml](packages/proxmox-recovery.yaml) | Proxmox monitoring recovery automation |
-| [themes.yaml](themes.yaml) | Homelab dark theme |
+| [themes/homelab.yaml](themes/homelab.yaml) | Homelab dark theme |
 | [secrets.example.yaml](secrets.example.yaml) | Invented placeholders for local credentials and connection details |
 | [integrations.md](integrations.md) | Integration setup, entity mapping, and instructions for using the examples |
 
