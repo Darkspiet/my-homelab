@@ -66,30 +66,6 @@ Replace the example entity IDs across the dashboard views and supporting files b
 
 Changes to these repository examples do not update the dashboard running on my tablet.
 
-## File Layout
-
-```text
-home-assistant/
-├── configuration.yaml
-├── secrets.example.yaml
-├── dashboards/
-│   ├── ui-lovelace.yaml
-│   └── views/
-│       ├── home.yaml
-│       ├── server.yaml
-│       └── system.yaml
-├── scripts/
-│   ├── proxmox.yaml
-│   └── nanoleaf.yaml
-├── packages/
-│   ├── nanoleaf.yaml
-│   └── proxmox-recovery.yaml
-├── themes/
-│   └── homelab.yaml
-├── images/
-├── integrations.md
-└── README.md
-```
 
 ## Supporting Configuration
 
@@ -123,7 +99,7 @@ The server integration brings these controls and readings to the tablet:
 | Govee light strip | Local LAN control | Brightness |
 | Nanoleaf light strip | HomeKit over Bluetooth | Switching and dimming |
 
-Govee uses the local LAN integration. The Nanoleaf controls include a reconnect button and connection feedback.
+Govee uses the local LAN integration. The Nanoleaf controls include a reconnect button and connection feedback because it sometimes decide to not cencored work.
 
 ## Configuration Backups
 
